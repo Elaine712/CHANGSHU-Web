@@ -195,5 +195,203 @@ window.CHANGSHU_DATA = {
     { title: "尚湖荷风夜游", tag: "夜游", time: "19:30", place: "尚湖", state: "余票充足" },
     { title: "沙家浜红色实景演艺", tag: "演艺", time: "15:30", place: "沙家浜", state: "余票紧张" },
     { title: "虞山琴派文化体验", tag: "非遗", time: "10:00", place: "虞山", state: "可预约" }
+  ],
+
+  plannerFilters: [
+    { key: "all", label: "全部" },
+    { key: "spot", label: "景点" },
+    { key: "heritage", label: "非遗店" },
+    { key: "food-shop", label: "美食店" },
+    { key: "dish", label: "常熟美食" }
+  ],
+
+  plannerSpots: [
+    {
+      id: "planner-yushan",
+      type: "spot",
+      name: "虞山景区",
+      short: "虞山",
+      tag: "山水人文",
+      x: 30,
+      y: 35,
+      image: "assets/scene-yushan.png",
+      openTime: "08:00-17:00",
+      ticket: "免费，部分景点另行收费",
+      crowd: "较舒适 58/100",
+      history:
+        "虞山是常熟城市文脉的重要象征，山不高而清秀，串联城墙、书院、琴派文化和古城生活。常熟琴派、藏书文化与虞山山水共同构成了江南文人城市的气质。",
+      detail:
+        "推荐从虞山北门进入，选择少台阶路线串联兴福寺、城墙遗址、琴川书院周边。适合文化讲解、轻徒步和银发慢游。"
+    },
+    {
+      id: "planner-shanghu",
+      type: "spot",
+      name: "尚湖景区",
+      short: "尚湖",
+      tag: "湖山湿地",
+      x: 58,
+      y: 42,
+      image: "assets/scene-shanghu.png",
+      openTime: "08:10-16:30",
+      ticket: "成人票约 80 元，活动票另计",
+      crowd: "舒适 42/100",
+      history:
+        "尚湖因姜太公隐居垂钓传说而闻名，湖面开阔，背靠虞山，是常熟湖山城市格局的重要组成。这里兼具湿地生态、亲子自然教育和湖畔休闲体验。",
+      detail:
+        "适合亲子、银发和摄影用户。建议优先查看 P2 停车场余位，上午或傍晚体验更舒适。"
+    },
+    {
+      id: "planner-shajiabang",
+      type: "spot",
+      name: "沙家浜景区",
+      short: "沙家浜",
+      tag: "红色研学",
+      x: 72,
+      y: 70,
+      image: "assets/scene-shajiabang.png",
+      openTime: "08:00-17:00",
+      ticket: "成人票约 100 元，演艺另计",
+      crowd: "较拥挤 78/100",
+      history:
+        "沙家浜以芦苇荡、红色记忆和实景演艺闻名，是常熟红色研学和团队游的重要目的地。水乡生态与革命叙事形成了独特的文化场景。",
+      detail:
+        "建议提前预约讲解和演艺场次。团队游客可使用换乘停车场，避开 13:30-15:30 高峰。"
+    },
+    {
+      id: "planner-fangta",
+      type: "spot",
+      name: "方塔园",
+      short: "方塔",
+      tag: "古城园林",
+      x: 42,
+      y: 55,
+      image: "assets/scene-shanghu.png",
+      openTime: "08:00-16:30",
+      ticket: "约 30 元",
+      crowd: "舒适 35/100",
+      history:
+        "方塔园位于常熟古城，是城市历史肌理中的代表性园林空间。方塔与古城街巷、老字号餐饮、非遗体验可组成半日 Citywalk。",
+      detail:
+        "适合与古城美食、非遗体验组合。步行体验最佳，停车建议选择外围停车场。"
+    },
+    {
+      id: "planner-qinpai",
+      type: "heritage",
+      name: "虞山琴派体验馆",
+      short: "琴派",
+      tag: "非遗体验",
+      x: 37,
+      y: 40,
+      image: "assets/scene-yushan.png",
+      openTime: "09:30-17:00",
+      ticket: "体验课 68 元起",
+      crowd: "较舒适 46/100",
+      history:
+        "虞山琴派是常熟重要的非遗文化符号，强调清微淡远的审美与江南文人气质。体验馆可提供古琴聆听、入门讲解和文化研学。",
+      detail:
+        "适合放在虞山文化线中段，体验时长 40-60 分钟。建议提前预约小班体验。"
+    },
+    {
+      id: "planner-blueprint",
+      type: "heritage",
+      name: "蓝印花布手作店",
+      short: "蓝印",
+      tag: "非遗手作",
+      x: 49,
+      y: 62,
+      image: "assets/hero-changshu.png",
+      openTime: "10:00-20:00",
+      ticket: "手作体验 58 元起",
+      crowd: "舒适 38/100",
+      history:
+        "蓝印花布以靛蓝和白色纹样构成江南日用美学，是水乡生活与民间工艺结合的代表。游客可完成拓印、染布和文创制作。",
+      detail:
+        "适合古城 Citywalk 与亲子路线，可与方塔园和老字号餐饮组合。"
+    },
+    {
+      id: "planner-wangsi",
+      type: "food-shop",
+      name: "王四酒家",
+      short: "王四",
+      tag: "叫花鸡老店",
+      x: 45,
+      y: 66,
+      image: "assets/scene-shanghu.png",
+      heat: "热门，预计排队 18 分钟",
+      review:
+        "游客点评：叫花鸡外皮香、肉质嫩，适合家庭聚餐；高峰时段建议提前取号，停车建议选择古城外围。",
+      detail:
+        "适合加入午餐或晚餐节点。若用户选择银发慢游，系统会优先推荐包厢和少步行路线。"
+    },
+    {
+      id: "planner-mian",
+      type: "food-shop",
+      name: "常吉兴面馆",
+      short: "面馆",
+      tag: "蕈油面",
+      x: 53,
+      y: 58,
+      image: "assets/scene-yushan.png",
+      heat: "较热，预计排队 10 分钟",
+      review:
+        "游客点评：蕈油香气突出，适合作为古城早午餐；店面不大，错峰体验更舒服。",
+      detail:
+        "建议安排在古城 Citywalk 起点或虞山下山后的补给节点。"
+    },
+    {
+      id: "planner-jiaohuaji",
+      type: "dish",
+      name: "常熟叫花鸡",
+      short: "叫花鸡",
+      tag: "地方名菜",
+      x: 63,
+      y: 60,
+      image: "assets/scene-shanghu.png",
+      history:
+        "叫花鸡是常熟代表性美食之一，以荷叶、泥封、焖烤等工艺形成独特香气。它不仅是菜品，也承载了江南饮食故事和城市记忆。",
+      detail:
+        "适合与古城、尚湖、虞山路线组合。推荐午餐或晚餐食用，团队游客建议提前预订。"
+    },
+    {
+      id: "planner-xunyoumian",
+      type: "dish",
+      name: "蕈油面",
+      short: "蕈油面",
+      tag: "季节风味",
+      x: 40,
+      y: 70,
+      image: "assets/hero-changshu.png",
+      history:
+        "蕈油面以菌菇香味见长，是常熟本帮风味中很有记忆点的一类面食。它适合用作轻量餐饮节点，连接古城街巷和本地生活。",
+      detail:
+        "适合上午或午餐安排。若路线偏轻松，系统会把它作为低耗时美食补给。"
+    }
+  ],
+
+  plannerAgentRoutes: [
+    {
+      id: "classic",
+      name: "经典湖山古城一日",
+      ids: ["planner-yushan", "planner-qinpai", "planner-mian", "planner-shanghu", "planner-fangta", "planner-wangsi"],
+      reason: "平衡文化、湖山、非遗和本帮美食，适合首次到常熟的游客。"
+    },
+    {
+      id: "slow",
+      name: "银发少步行慢游",
+      ids: ["planner-shanghu", "planner-blueprint", "planner-wangsi", "planner-fangta"],
+      reason: "减少步行和爬坡，优先停车方便、休息点多的点位。"
+    },
+    {
+      id: "food",
+      name: "古城非遗美食线",
+      ids: ["planner-fangta", "planner-blueprint", "planner-xunyoumian", "planner-mian", "planner-jiaohuaji"],
+      reason: "把古城街巷、非遗手作和本地美食串成半日 Citywalk。"
+    },
+    {
+      id: "random",
+      name: "P 人随性路线",
+      ids: ["planner-shanghu", "planner-mian", "planner-blueprint", "planner-yushan"],
+      reason: "少做决定，先去舒适度高的点位，再根据心情补充美食和非遗。"
+    }
   ]
 };

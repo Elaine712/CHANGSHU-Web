@@ -25,6 +25,7 @@
       </a>
 
       <nav class="main-nav" aria-label="页面导航">
+        <a href="#plan-map">地图规划</a>
         <a href="#itinerary">AI 行程</a>
         <a href="#map">实时地图</a>
         <a href="#parking">停车客流</a>
@@ -43,6 +44,7 @@
     </header>
 
     <aside class="scroll-rail" aria-label="页面进度">
+      <a href="#plan-map" data-rail="plan-map"><span>00</span>规划</a>
       <a href="#itinerary" data-rail="itinerary"><span>01</span>AI 行程</a>
       <a href="#map" data-rail="map"><span>02</span>地图</a>
       <a href="#parking" data-rail="parking"><span>03</span>停车</a>
@@ -51,6 +53,118 @@
     </aside>
 
     <main id="main">
+      <section class="story-page plan-map-section" id="plan-map" data-section="plan-map" aria-labelledby="plan-map-title">
+        <div class="shell planner-shell">
+          <aside class="planner-side reveal">
+            <div class="planner-intro">
+              <p class="section-kicker">00 · 常熟地图规划工作台</p>
+              <h1 id="plan-map-title">一张地图，把想去的常熟拖成路线</h1>
+              <p>
+                首屏展示常熟市重点景点、非遗店、美食店和地方美食。点击坐标查看卡片，双击展开详情，拖到右侧卡槽即可生成你的路线。
+              </p>
+            </div>
+
+            <div class="planner-search" role="search">
+              <span>AI</span>
+              <input id="plannerSearch" type="search" placeholder="搜索虞山、蓝印花布、蕈油面、王四酒家" />
+            </div>
+
+            <div class="planner-mode">
+              <div class="planner-mode-head">
+                <span>规划人格</span>
+                <strong id="plannerModeLabel">J 人手动规划</strong>
+              </div>
+              <div class="planner-segments" role="group" aria-label="规划模式">
+                <button class="active" type="button" data-planner-mode="j">J 人</button>
+                <button type="button" data-planner-mode="p">P 人</button>
+              </div>
+              <p id="plannerModeHint">J 人模式：你自己点击点位、查看卡片、拖进右侧卡槽组织路线。</p>
+            </div>
+
+            <div class="planner-filter-box">
+              <h2>地图图层</h2>
+              <div class="planner-filters" id="plannerFilters"></div>
+            </div>
+
+            <div class="planner-agent">
+              <h2>P 人 Agent</h2>
+              <p>按舒适度、停车、主题和随机灵感生成路线，生成后仍可手动调整。</p>
+              <div class="planner-agent-actions">
+                <button class="solid-button" type="button" id="plannerAgentPlan">随机生成路线</button>
+                <button class="ghost-button" type="button" id="plannerClearPlan">清空卡槽</button>
+              </div>
+              <div class="planner-agent-note" id="plannerAgentNote">等待选择点位或生成路线。</div>
+            </div>
+          </aside>
+
+          <section class="planner-map-panel reveal" aria-label="常熟市地图点位">
+            <div class="planner-map-toolbar">
+              <button class="active" type="button" data-planner-view="all">全域</button>
+              <button type="button" data-planner-view="old-town">古城美食</button>
+              <button type="button" data-planner-view="lake">湖山景点</button>
+              <button type="button" data-planner-view="study">非遗研学</button>
+            </div>
+
+            <div class="planner-map-canvas" id="plannerMapCanvas">
+              <div class="planner-map-region"></div>
+              <div class="planner-river planner-river-one"></div>
+              <div class="planner-river planner-river-two"></div>
+              <div class="planner-mountain"></div>
+              <div class="planner-lake"></div>
+              <div class="planner-oldtown"></div>
+              <svg class="planner-route-svg" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+                <path id="plannerRoutePath" d="" />
+              </svg>
+              <div class="planner-pins" id="plannerPins"></div>
+            </div>
+
+            <div class="planner-legend">
+              <span><i class="spot"></i>景点</span>
+              <span><i class="heritage"></i>非遗店</span>
+              <span><i class="food-shop"></i>美食店</span>
+              <span><i class="dish"></i>常熟美食</span>
+            </div>
+
+            <div class="planner-card-shelf" id="plannerCardShelf" aria-label="点位卡片">
+              <div class="planner-empty" id="plannerShelfEmpty">
+                <span>点击地图上的小坐标</span>
+                <strong>查看景点、非遗、美食卡片</strong>
+              </div>
+            </div>
+          </section>
+
+          <aside class="planner-route-panel reveal" aria-label="我的常熟路线卡槽">
+            <div class="planner-route-head">
+              <div>
+                <p class="section-kicker">My Route</p>
+                <h2>我的常熟路线</h2>
+              </div>
+              <span id="plannerPlanCount">0 个点</span>
+            </div>
+
+            <div class="planner-drop-zone" id="plannerDropZone">
+              <div class="planner-empty">
+                <strong>把卡片拖进来</strong>
+                <span>也可以切到 P 人，让 Agent 自动生成。</span>
+              </div>
+            </div>
+
+            <div class="planner-summary">
+              <article>
+                <span>预计时长</span>
+                <b id="plannerDuration">--</b>
+              </article>
+              <article>
+                <span>路线类型</span>
+                <b id="plannerType">待规划</b>
+              </article>
+            </div>
+
+            <button class="solid-button full" type="button" id="plannerExport">生成路书</button>
+          </aside>
+        </div>
+      </section>
+
       <section class="hero-section" id="home" aria-labelledby="home-title">
         <div class="hero-bg" aria-hidden="true"></div>
         <div class="shell hero-grid">

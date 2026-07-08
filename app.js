@@ -530,6 +530,331 @@ function bindTickets() {
   });
 }
 
+const plannerState = {
+  activeFilter: "all",
+  activeSpotId: null,
+  selectedIds: [],
+  dragId: null,
+  mode: "j"
+};
+
+const plannerTypeLabels = {
+  spot: "景点",
+  heritage: "非遗店",
+  "food-shop": "美食店",
+  dish: "常熟美食"
+};
+
+function getPlannerSpots() {
+  return Array.isArray(DATA.plannerSpots) ? DATA.plannerSpots : [];
+}
+
+function findPlannerSpot(id) {
+  return getPlannerSpots().find((spot) => spot.id === id);
+}
+
+function getPlannerFacts(spot) {
+  if (spot.type === "spot" || spot.type === "heritage") {
+    return [`开放 ${spot.openTime}`, `门票 ${spot.ticket}`, `人流 ${spot.crowd}`];
+  }
+  if (spot.type === "food-shop") {
+    return [spot.heat, "游客点评", spot.tag];
+  }
+  return ["历史简介", spot.tag, "推荐加入路线"];
+}
+
+function getPlannerSummary(spot) {
+  if (spot.type === "food-shop") return spot.review;
+  return spot.history;
+}
+
+function renderPlannerFilters() {
+  const host = $("#plannerFilters");
+  if (!host) return;
+  const filters = DATA.plannerFilters || [
+    { key: "all", label: "全部" },
+    { key: "spot", label: "景点" },
+    { key: "heritage", label: "非遗店" },
+    { key: "food-shop", label: "美食店" },
+    { key: "dish", label: "常熟美食" }
+  ];
+
+  setChildren(
+    host,
+    filters.map((filter) => {
+      const button = makeEl("button", filter.key === plannerState.activeFilter ? "active" : "", filter.label);
+      button.type = "button";
+      button.dataset.plannerFilter = filter.key;
+      button.addEventListener("click", () => {
+        plannerState.activeFilter = filter.key;
+        renderPlannerFilters();
+        renderPlannerPins();
+      });
+      return button;
+    })
+  );
+}
+
+function renderPlannerPins(searchValue = $("#plannerSearch")?.value || "") {
+  const host = $("#plannerPins");
+  if (!host) return;
+  const keyword = searchValue.trim().toLowerCase();
+  const pins = getPlannerSpots().map((spot) => {
+    const matchesFilter = plannerState.activeFilter === "all" || spot.type === plannerState.activeFilter;
+    const matchesSearch =
+      !keyword ||
+      spot.name.toLowerCase().includes(keyword) ||
+      spot.short.toLowerCase().includes(keyword) ||
+      spot.tag.toLowerCase().includes(keyword);
+    const button = makeEl(
+      "button",
+      `planner-pin ${spot.type}${plannerState.activeSpotId === spot.id ? " selected" : ""}${matchesFilter && matchesSearch ? "" : " hidden"}`,
+      spot.short
+    );
+    button.type = "button";
+    button.title = spot.name;
+    button.dataset.id = spot.id;
+    button.style.setProperty("--x", spot.x);
+    button.style.setProperty("--y", spot.y);
+    button.addEventListener("click", () => selectPlannerSpot(spot.id));
+    return button;
+  });
+  setChildren(host, pins);
+}
+
+function createPlannerCard(spot, compact = false) {
+  const card = makeEl("article", compact ? "planner-route-item" : "planner-place-card");
+  card.dataset.id = spot.id;
+  card.draggable = !compact;
+
+  if (compact) {
+    const index = makeEl("span", "planner-route-index", String(plannerState.selectedIds.indexOf(spot.id) + 1).padStart(2, "0"));
+    const body = makeEl("div", "planner-route-body");
+    body.innerHTML = `
+      <h3>${spot.name}</h3>
+      <p>${plannerTypeLabels[spot.type]} · ${spot.tag}</p>
+      <div class="planner-route-detail">
+        <strong>${spot.type === "food-shop" ? "店铺点评" : "历史简介"}</strong>
+        <span>${getPlannerSummary(spot)}</span>
+        <strong>更具体的介绍</strong>
+        <span>${spot.detail}</span>
+      </div>
+    `;
+    const remove = makeEl("button", "planner-remove", "×");
+    remove.type = "button";
+    remove.setAttribute("aria-label", `从路线中移除 ${spot.name}`);
+    remove.addEventListener("click", () => removePlannerSpot(spot.id));
+    card.append(index, body, remove);
+    card.addEventListener("dblclick", () => card.classList.toggle("expanded"));
+    return card;
+  }
+
+  const image = makeEl("div", "planner-card-image");
+  image.style.setProperty("--card-image", `url("${spot.image}")`);
+  const facts = getPlannerFacts(spot).map((fact) => `<span>${fact}</span>`).join("");
+  const body = makeEl("div", "planner-card-body");
+  body.innerHTML = `
+    <span class="planner-type-label">${plannerTypeLabels[spot.type]} · ${spot.tag}</span>
+    <h3>${spot.name}</h3>
+    <p>${getPlannerSummary(spot)}</p>
+    <div class="planner-card-facts">${facts}</div>
+    <div class="planner-inline-detail">
+      <h4>${spot.type === "food-shop" ? "店铺点评" : spot.type === "dish" ? "美食历史简介" : "景点历史简介"}</h4>
+      <p>${getPlannerSummary(spot)}</p>
+      <h4>更具体的介绍</h4>
+      <p>${spot.detail}</p>
+      <h4>规划建议</h4>
+      <p>拖入右侧卡槽后，系统会在地图上绘制路线。J 人可以自行排序，P 人可以先让 Agent 生成再微调。</p>
+    </div>
+  `;
+  const actions = makeEl("div", "planner-card-actions");
+  const add = makeEl("button", "", "加入路线");
+  add.type = "button";
+  add.addEventListener("click", () => addPlannerSpot(spot.id));
+  const detail = makeEl("button", "planner-detail-button", "展开详情");
+  detail.type = "button";
+  detail.addEventListener("click", () => togglePlannerCard(card, detail));
+  actions.append(add, detail);
+
+  card.append(image, body, actions);
+  card.addEventListener("dragstart", (event) => {
+    plannerState.dragId = spot.id;
+    event.dataTransfer.setData("text/plain", spot.id);
+    event.dataTransfer.effectAllowed = "copy";
+  });
+  card.addEventListener("dblclick", () => togglePlannerCard(card, detail));
+  return card;
+}
+
+function togglePlannerCard(card, button) {
+  card.classList.toggle("expanded");
+  if (button) button.textContent = card.classList.contains("expanded") ? "收起详情" : "展开详情";
+}
+
+function selectPlannerSpot(id) {
+  const spot = findPlannerSpot(id);
+  const shelf = $("#plannerCardShelf");
+  if (!spot || !shelf) return;
+  plannerState.activeSpotId = id;
+  renderPlannerPins();
+  setChildren(shelf, [createPlannerCard(spot)]);
+}
+
+function addPlannerSpot(id) {
+  if (!findPlannerSpot(id)) return;
+  if (!plannerState.selectedIds.includes(id)) plannerState.selectedIds.push(id);
+  renderPlannerPlan();
+}
+
+function removePlannerSpot(id) {
+  plannerState.selectedIds = plannerState.selectedIds.filter((item) => item !== id);
+  renderPlannerPlan();
+}
+
+function plannerPlanType() {
+  const types = plannerState.selectedIds.map((id) => findPlannerSpot(id)?.type).filter(Boolean);
+  if (!types.length) return "待规划";
+  if (types.includes("heritage") && types.includes("food-shop")) return "非遗美食线";
+  if (types.includes("spot") && plannerState.selectedIds.length >= 4) return "全域游线";
+  if (types.every((type) => type === "dish" || type === "food-shop")) return "美食线";
+  return "自定义路线";
+}
+
+function renderPlannerPlan() {
+  const zone = $("#plannerDropZone");
+  if (!zone) return;
+
+  if (!plannerState.selectedIds.length) {
+    zone.innerHTML = `
+      <div class="planner-empty">
+        <strong>把卡片拖进来</strong>
+        <span>也可以切到 P 人，让 Agent 自动生成。</span>
+      </div>
+    `;
+  } else {
+    setChildren(
+      zone,
+      plannerState.selectedIds
+        .map(findPlannerSpot)
+        .filter(Boolean)
+        .map((spot) => createPlannerCard(spot, true))
+    );
+  }
+
+  const count = $("#plannerPlanCount");
+  const duration = $("#plannerDuration");
+  const type = $("#plannerType");
+  if (count) count.textContent = `${plannerState.selectedIds.length} 个点`;
+  if (duration) duration.textContent = plannerState.selectedIds.length ? `${Math.max(2, plannerState.selectedIds.length * 1.2).toFixed(1)}h` : "--";
+  if (type) type.textContent = plannerPlanType();
+  drawPlannerRoute();
+}
+
+function drawPlannerRoute() {
+  const path = $("#plannerRoutePath");
+  if (!path) return;
+  if (plannerState.selectedIds.length < 2) {
+    path.setAttribute("d", "");
+    return;
+  }
+  const points = plannerState.selectedIds
+    .map(findPlannerSpot)
+    .filter(Boolean)
+    .map((spot) => [spot.x * 10, spot.y * 7]);
+  const [first, ...rest] = points;
+  const d = [`M ${first[0]} ${first[1]}`];
+  rest.forEach(([x, y]) => d.push(`L ${x} ${y}`));
+  path.setAttribute("d", d.join(" "));
+}
+
+function renderPlannerAgentRoute(route) {
+  plannerState.selectedIds = route.ids.filter((id) => findPlannerSpot(id));
+  const note = $("#plannerAgentNote");
+  if (note) note.textContent = `${route.name}：${route.reason}`;
+  renderPlannerPlan();
+}
+
+function bindPlannerWorkbench() {
+  $("#plannerSearch")?.addEventListener("input", (event) => renderPlannerPins(event.target.value));
+
+  $$(".planner-segments button").forEach((button) => {
+    button.addEventListener("click", () => {
+      $$(".planner-segments button").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      plannerState.mode = button.dataset.plannerMode || "j";
+      const isManual = plannerState.mode === "j";
+      $("#plannerModeLabel").textContent = isManual ? "J 人手动规划" : "P 人 Agent 规划";
+      $("#plannerModeHint").textContent = isManual
+        ? "J 人模式：你自己点击点位、查看卡片、拖进右侧卡槽组织路线。"
+        : "P 人模式：Agent 会按主题、舒适度和停车情况生成路线，你也可以继续拖拽微调。";
+      if (!isManual) {
+        const route = DATA.plannerAgentRoutes?.find((item) => item.id === "random") || DATA.plannerAgentRoutes?.[0];
+        if (route) renderPlannerAgentRoute(route);
+      }
+    });
+  });
+
+  $$(".planner-map-toolbar button").forEach((button) => {
+    button.addEventListener("click", () => {
+      $$(".planner-map-toolbar button").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      const view = button.dataset.plannerView;
+      if (view === "old-town") plannerState.activeFilter = "food-shop";
+      if (view === "lake") plannerState.activeFilter = "spot";
+      if (view === "study") plannerState.activeFilter = "heritage";
+      if (view === "all") plannerState.activeFilter = "all";
+      renderPlannerFilters();
+      renderPlannerPins();
+    });
+  });
+
+  const zone = $("#plannerDropZone");
+  zone?.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    zone.classList.add("drag-over");
+  });
+  zone?.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+  zone?.addEventListener("drop", (event) => {
+    event.preventDefault();
+    zone.classList.remove("drag-over");
+    const id = event.dataTransfer.getData("text/plain") || plannerState.dragId;
+    if (id) addPlannerSpot(id);
+  });
+
+  $("#plannerAgentPlan")?.addEventListener("click", () => {
+    const routes = DATA.plannerAgentRoutes || [];
+    const route = routes[Math.floor(Math.random() * routes.length)];
+    if (route) renderPlannerAgentRoute(route);
+  });
+
+  $("#plannerClearPlan")?.addEventListener("click", () => {
+    plannerState.selectedIds = [];
+    const note = $("#plannerAgentNote");
+    if (note) note.textContent = "已清空路线。";
+    renderPlannerPlan();
+  });
+
+  $("#plannerExport")?.addEventListener("click", () => {
+    const note = $("#plannerAgentNote");
+    if (!plannerState.selectedIds.length) {
+      if (note) note.textContent = "请先拖入至少一个点位。";
+      return;
+    }
+    const names = plannerState.selectedIds.map((id) => findPlannerSpot(id)?.name).filter(Boolean).join(" → ");
+    if (note) note.textContent = `已生成路书：${names}`;
+  });
+}
+
+function initPlannerWorkbench() {
+  if (!$("#plan-map")) return;
+  renderPlannerFilters();
+  renderPlannerPins();
+  renderPlannerPlan();
+  bindPlannerWorkbench();
+  const firstSpot = getPlannerSpots()[0];
+  if (firstSpot) selectPlannerSpot(firstSpot.id);
+}
+
 function bindScrollMotion() {
   const revealEls = $$(".reveal");
   if ("IntersectionObserver" in window) {
@@ -597,6 +922,7 @@ function bindScrollMotion() {
 }
 
 renderDataDrivenSections();
+initPlannerWorkbench();
 bindPlanner();
 bindMap();
 bindParking();
