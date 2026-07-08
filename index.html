@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>常熟智游 | 全域文旅智能出行助手</title>
+    <meta
+      name="description"
+      content="常熟全域文旅智能出行助手原型，覆盖 AI 行程、实时地图、停车客流、景区讲解、诉求闭环。"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="app-header" aria-label="常熟智游主导航">
+      <a class="brand" href="#home" aria-label="返回常熟智游首页">
+        <span class="brand-mark" aria-hidden="true">
+          <span></span>
+        </span>
+        <span>
+          <strong>常熟智游</strong>
+          <small>Changshu Smart Travel</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="页面导航">
+        <a href="#itinerary">AI 行程</a>
+        <a href="#map">实时地图</a>
+        <a href="#parking">停车客流</a>
+        <a href="#guide">景区讲解</a>
+        <a href="#feedback">诉求闭环</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="weather-chip" type="button" aria-label="今日天气">
+          <span>28°C</span>
+          <strong>多云 · 适宜出游</strong>
+        </button>
+        <button class="text-button" type="button">中 / EN</button>
+        <button class="solid-button small" type="button">我的行程</button>
+      </div>
+    </header>
+
+    <aside class="scroll-rail" aria-label="页面进度">
+      <a href="#itinerary" data-rail="itinerary"><span>01</span>AI 行程</a>
+      <a href="#map" data-rail="map"><span>02</span>地图</a>
+      <a href="#parking" data-rail="parking"><span>03</span>停车</a>
+      <a href="#guide" data-rail="guide"><span>04</span>讲解</a>
+      <a href="#feedback" data-rail="feedback"><span>05</span>诉求</a>
+    </aside>
+
+    <main id="main">
+      <section class="hero-section" id="home" aria-labelledby="home-title">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="shell hero-grid">
+          <div class="hero-copy reveal">
+            <p class="eyebrow">常熟全域文旅智能出行助手</p>
+            <h1 id="home-title">一句话，智游常熟</h1>
+            <p class="hero-subtitle">
+              AI 规划行程、实时避峰、查询停车、智能讲解、诉求闭环，一站式全域文旅服务。
+            </p>
+            <div class="hero-stats" id="heroStats" aria-label="平台实时指标"></div>
+
+            <form class="ai-search" id="heroPlanner" aria-label="AI 行程规划输入">
+              <label class="visually-hidden" for="heroPrompt">请输入你的常熟旅行需求</label>
+              <input
+                id="heroPrompt"
+                name="prompt"
+                type="text"
+                value="带父母常熟一日游，少走路，想吃本帮菜，避开拥挤景区"
+              />
+              <button class="solid-button" type="submit">
+                <span class="button-icon">AI</span>
+                生成行程
+              </button>
+            </form>
+
+            <div class="quick-tags" aria-label="快捷行程偏好">
+              <button type="button" data-prompt="亲子周末，上午自然教育，下午轻松美食，避开拥堵">亲子周末</button>
+              <button type="button" data-prompt="银发慢游，少走路，停车方便，有讲解和休息点">银发慢游</button>
+              <button type="button" data-prompt="红色研学，沙家浜主题，包含讲解和团队预约">红色研学</button>
+              <button type="button" data-prompt="非遗美食路线，古城 Citywalk，本帮菜和老字号">非遗美食</button>
+              <button type="button" data-prompt="湖山骑行，尚湖和虞山，傍晚看日落">湖山骑行</button>
+              <button type="button" data-prompt="雨天路线，少户外，多场馆和室内体验">雨天路线</button>
+            </div>
+            <div class="featured-places" id="featuredPlaces" aria-label="常熟热门目的地"></div>
+          </div>
+
+          <div class="today-card reveal" aria-label="今日常熟实时状态">
+            <div class="card-head">
+              <span class="live-dot"></span>
+              <span>今日实时状态</span>
+              <strong>18:08 更新</strong>
+            </div>
+            <div class="status-list">
+              <article>
+                <span>虞山景区</span>
+                <strong class="status status-calm">较舒适</strong>
+              </article>
+              <article>
+                <span>尚湖景区</span>
+                <strong class="status status-open">舒适</strong>
+              </article>
+              <article>
+                <span>沙家浜</span>
+                <strong class="status status-busy">较拥挤</strong>
+              </article>
+              <article>
+                <span>古城片区停车</span>
+                <strong>剩余 1268 位</strong>
+              </article>
+            </div>
+            <div class="ai-note">
+              <b>避峰建议</b>
+              当前更适合古城 Citywalk，14:30 后前往尚湖，沙家浜预计 16:00 后客流回落。
+            </div>
+          </div>
+        </div>
+
+        <div class="shell service-strip reveal" aria-label="全域文旅服务入口">
+          <a href="#itinerary"><span>AI</span>行程规划</a>
+          <a href="#guide"><span>听</span>智能讲解</a>
+          <a href="#map"><span>图</span>景区舒适度</a>
+          <a href="#parking"><span>P</span>停车查询</a>
+          <a href="#map"><span>路</span>实时路况</a>
+          <a href="#guide"><span>票</span>门票预约</a>
+          <a href="#map"><span>厕</span>找厕所</a>
+          <a href="#map"><span>寄</span>行李寄存</a>
+          <a href="#map"><span>站</span>旅游驿站</a>
+          <a href="#itinerary"><span>食</span>美食推荐</a>
+          <a href="#feedback"><span>救</span>投诉求助</a>
+          <a href="#feedback"><span>服</span>一键客服</a>
+        </div>
+
+        <a class="scroll-cue" href="#itinerary" aria-label="向下查看五个核心页面">
+          <span></span>
+          五个核心服务
+        </a>
+      </section>
+
+      <section class="story-page itinerary-page" id="itinerary" data-section="itinerary" aria-labelledby="itinerary-title">
+        <div class="shell page-grid">
+          <div class="page-copy reveal">
+            <p class="section-kicker">01 · AI 决策层</p>
+            <h2 id="itinerary-title">常熟属地文旅大模型，生成可执行行程</h2>
+            <p>
+              参考携程、Tripadvisor 和 Wanderlog 的行程体验，把游客画像、天气、客流、交通、停车和预约状态合并计算。
+              游客可以一句话调整，系统即时重排行程。
+            </p>
+            <div class="planner-panel">
+              <div class="mode-switch" id="tripModes" aria-label="行程模式"></div>
+              <div class="field-row">
+                <label>
+                  同行人
+                  <select id="travelerType">
+                    <option>带父母</option>
+                    <option>亲子家庭</option>
+                    <option>研学团队</option>
+                    <option>朋友周末</option>
+                  </select>
+                </label>
+                <label>
+                  时长
+                  <select id="tripDays">
+                    <option>常熟一日游</option>
+                    <option>常熟二日游</option>
+                    <option>半日轻游</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                一句话调整
+                <textarea id="refinePrompt" rows="3">少走路，午餐想吃本帮菜，下午避开拥挤景区。</textarea>
+              </label>
+              <div class="planner-actions">
+                <button class="solid-button" id="refreshPlan" type="button">重新生成</button>
+                <button class="ghost-button" data-refine="避开拥挤">避开拥挤</button>
+                <button class="ghost-button" data-refine="少走路">少走路</button>
+                <button class="ghost-button" data-refine="加入美食">加入美食</button>
+              </div>
+              <p class="planner-message" id="plannerMessage" aria-live="polite">
+                已结合实时客流与停车余位，优先推荐虞山文化线、尚湖慢游和古城夜游。
+              </p>
+            </div>
+          </div>
+
+          <div class="itinerary-workbench reveal">
+            <div class="workbench-head">
+              <div>
+                <p>AI 为你生成</p>
+                <h3>常熟一日舒适路线</h3>
+              </div>
+              <button class="text-button" type="button">发送到手机</button>
+            </div>
+            <div class="route-metrics" id="routeMetrics" aria-label="路线指标"></div>
+
+            <div class="route-layout">
+              <ol class="timeline" id="timeline">
+                <li>
+                  <time>09:00</time>
+                  <div>
+                    <strong>常熟站 / 酒店出发</strong>
+                    <span>智能估算 24 分钟到虞山北门，推荐 P3 停车场。</span>
+                  </div>
+                </li>
+                <li>
+                  <time>09:35</time>
+                  <div>
+                    <strong>虞山文化游线</strong>
+                    <span>琴派文化讲解可用，当前较舒适，建议游玩 90 分钟。</span>
+                  </div>
+                </li>
+                <li>
+                  <time>11:40</time>
+                  <div>
+                    <strong>本帮菜午餐</strong>
+                    <span>推荐老字号餐厅，步行 8 分钟，可提前取号。</span>
+                  </div>
+                </li>
+                <li>
+                  <time>13:20</time>
+                  <div>
+                    <strong>尚湖湿地轻游</strong>
+                    <span>停车余位 214，当前舒适，适合银发慢游。</span>
+                  </div>
+                </li>
+                <li>
+                  <time>18:00</time>
+                  <div>
+                    <strong>古城夜游与美食</strong>
+                    <span>避开沙家浜高峰后回到古城，串联非遗手作和夜市。</span>
+                  </div>
+                </li>
+              </ol>
+
+              <div class="mini-map" aria-label="常熟一日游路线示意图">
+                <svg viewBox="0 0 420 360" role="img" aria-label="虞山、尚湖、古城路线连线">
+                  <path class="map-area" d="M80 56 C160 22 252 38 328 94 C386 138 377 229 319 285 C252 349 145 326 83 282 C18 234 17 99 80 56Z" />
+                  <path class="route-path" d="M118 102 C185 78 244 94 292 142 C334 185 280 226 228 235 C171 246 137 203 155 163" />
+                  <circle class="pin calm" cx="118" cy="102" r="11" />
+                  <circle class="pin open" cx="292" cy="142" r="11" />
+                  <circle class="pin busy" cx="228" cy="235" r="11" />
+                  <circle class="pin calm" cx="155" cy="163" r="11" />
+                  <text x="86" y="86">虞山</text>
+                  <text x="306" y="132">尚湖</text>
+                  <text x="232" y="262">古城</text>
+                  <text x="137" y="154">餐饮</text>
+                </svg>
+                <div class="map-legend">
+                  <span><i class="open"></i>舒适</span>
+                  <span><i class="calm"></i>较舒适</span>
+                  <span><i class="busy"></i>较拥挤</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-page map-page" id="map" data-section="map" aria-labelledby="map-title">
+        <div class="shell split-heading reveal">
+          <div>
+            <p class="section-kicker">02 · 地图感知层</p>
+            <h2 id="map-title">全域文旅实时地图，把服务放在游客脚下</h2>
+          </div>
+          <p>
+            地图实时展示景区热度、停车余位、道路拥堵、厕所、游客中心、演出点、餐饮、无障碍设施，并给出避峰建议。
+          </p>
+        </div>
+
+        <div class="shell map-workspace reveal">
+          <aside class="map-filter" aria-label="地图筛选">
+            <h3>筛选服务</h3>
+            <button class="filter-button active" data-filter="all">全部</button>
+            <button class="filter-button active" data-filter="spot">景点</button>
+            <button class="filter-button active" data-filter="parking">停车</button>
+            <button class="filter-button active" data-filter="service">公共服务</button>
+            <button class="filter-button active" data-filter="food">美食</button>
+            <button class="filter-button active" data-filter="accessible">无障碍</button>
+            <div class="filter-note">
+              <b>AI 避峰建议</b>
+              沙家浜当前较拥挤，建议先游尚湖或古城片区，16:00 后再进入芦苇荡。
+            </div>
+          </aside>
+
+          <div class="city-map" aria-label="常熟全域文旅实时地图">
+            <div class="layer-dock" aria-label="地图图层">
+              <button class="active" type="button" data-layer="heat">客流热力</button>
+              <button class="active" type="button" data-layer="parking">停车余位</button>
+              <button class="active" type="button" data-layer="service">便民服务</button>
+            </div>
+            <div class="water-shape"></div>
+            <div class="road road-one"></div>
+            <div class="road road-two"></div>
+            <button class="map-pin spot calm" data-category="spot" style="--x: 25%; --y: 28%" data-title="虞山景区" data-detail="较舒适，讲解可用，北门停车剩余 86 位">虞山</button>
+            <button class="map-pin spot open" data-category="spot" style="--x: 58%; --y: 42%" data-title="尚湖景区" data-detail="舒适，P2 停车剩余 214 位，适合亲子和银发慢游">尚湖</button>
+            <button class="map-pin spot busy" data-category="spot" style="--x: 72%; --y: 70%" data-title="沙家浜" data-detail="较拥挤，演艺预约 15:30 场余票紧张">沙家浜</button>
+            <button class="map-pin spot calm" data-category="spot" style="--x: 38%; --y: 58%" data-title="常熟古城" data-detail="较舒适，推荐步行 Citywalk 和非遗手作">古城</button>
+            <button class="map-pin parking open" data-category="parking" style="--x: 18%; --y: 45%" data-title="虞山北门停车场" data-detail="剩余 86 位，步行至入口 6 分钟">P1</button>
+            <button class="map-pin parking open" data-category="parking" style="--x: 63%; --y: 30%" data-title="尚湖 P2 停车场" data-detail="剩余 214 位，新能源充电 18 个">P2</button>
+            <button class="map-pin parking busy" data-category="parking" style="--x: 81%; --y: 62%" data-title="沙家浜换乘停车场" data-detail="剩余 52 位，建议换乘景区接驳">P3</button>
+            <button class="map-pin service calm" data-category="service" style="--x: 46%; --y: 35%" data-title="旅游驿站" data-detail="可咨询、饮水、休息、行李寄存">驿站</button>
+            <button class="map-pin service open" data-category="service" style="--x: 33%; --y: 72%" data-title="公共厕所" data-detail="步行 3 分钟，开放中，无障碍厕位可用">厕所</button>
+            <button class="map-pin food calm" data-category="food" style="--x: 47%; --y: 64%" data-title="本帮菜街区" data-detail="叫花鸡、蕈油面、桂花酒推荐，当前排队 12 分钟">美食</button>
+            <button class="map-pin accessible open" data-category="accessible" style="--x: 57%; --y: 55%" data-title="无障碍游线" data-detail="坡道、轮椅租借、休息点可用">无障碍</button>
+          </div>
+
+          <aside class="map-inspector" aria-live="polite">
+            <div class="panel-label">当前点位</div>
+            <h3 id="pinTitle">尚湖景区</h3>
+            <p id="pinDetail">舒适，P2 停车剩余 214 位，适合亲子和银发慢游。</p>
+            <div class="metric-row">
+              <span>客流指数</span>
+              <b>42 / 100</b>
+            </div>
+            <div class="metric-row">
+              <span>停车余位</span>
+              <b>214</b>
+            </div>
+            <button class="solid-button full" type="button">加入我的行程</button>
+            <button class="ghost-button full" type="button">一键导航</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="story-page parking-page" id="parking" data-section="parking" aria-labelledby="parking-title">
+        <div class="shell page-grid reverse">
+          <div class="parking-dashboard reveal">
+            <div class="dashboard-top">
+              <div>
+                <p class="section-kicker">03 · 停车客流</p>
+                <h2 id="parking-title">从“有没有位”到“现在去哪更舒服”</h2>
+              </div>
+              <button class="solid-button small" type="button">开启避峰模式</button>
+            </div>
+
+            <div class="kpi-grid">
+              <article>
+                <span>全域停车余位</span>
+                <strong data-count="1628">1628</strong>
+                <small>较 30 分钟前 +126</small>
+              </article>
+              <article>
+                <span>热门景区舒适度</span>
+                <strong>72%</strong>
+                <small>尚湖、古城优先推荐</small>
+              </article>
+              <article>
+                <span>道路拥堵指数</span>
+                <strong>34</strong>
+                <small>沙家浜东入口缓行</small>
+              </article>
+            </div>
+
+            <div class="parking-list" id="parkingList" aria-label="停车场列表">
+              <button class="parking-card active" data-lot="虞山北门停车场" data-left="86" data-walk="6 分钟" data-status="较舒适">
+                <span>P1</span>
+                <strong>虞山北门停车场</strong>
+                <small>余位 86 · 步行 6 分钟</small>
+              </button>
+              <button class="parking-card" data-lot="尚湖 P2 停车场" data-left="214" data-walk="8 分钟" data-status="舒适">
+                <span>P2</span>
+                <strong>尚湖 P2 停车场</strong>
+                <small>余位 214 · 充电桩 18</small>
+              </button>
+              <button class="parking-card" data-lot="沙家浜换乘停车场" data-left="52" data-walk="接驳 4 分钟" data-status="较拥挤">
+                <span>P3</span>
+                <strong>沙家浜换乘停车场</strong>
+                <small>余位 52 · 建议接驳</small>
+              </button>
+            </div>
+          </div>
+
+          <div class="crowd-panel reveal">
+            <h3>客流与停车联动预测</h3>
+            <p id="lotSummary">虞山北门停车场剩余 86 位，步行到入口约 6 分钟，当前较舒适。</p>
+            <div class="time-switch" id="parkingTimes" aria-label="选择预测时段"></div>
+            <div class="forecast-bars" aria-label="今日客流预测">
+              <span style="--h: 36%"><b>09:00</b></span>
+              <span style="--h: 48%"><b>11:00</b></span>
+              <span style="--h: 70%"><b>13:00</b></span>
+              <span style="--h: 88%"><b>15:00</b></span>
+              <span style="--h: 52%"><b>17:00</b></span>
+              <span style="--h: 40%"><b>19:00</b></span>
+            </div>
+            <div class="crowd-advice">
+              <span>AI</span>
+              <p>
+                13:30 到 15:30 沙家浜客流峰值较高，自驾游客建议先停尚湖 P2，游览湿地后再进入沙家浜。
+              </p>
+            </div>
+            <div class="transport-grid">
+              <article>
+                <b>公交接驳</b>
+                <span>20 分钟 / 班</span>
+              </article>
+              <article>
+                <b>步行友好</b>
+                <span>古城片区优先</span>
+              </article>
+              <article>
+                <b>新能源</b>
+                <span>可用充电桩 42</span>
+              </article>
+              <article>
+                <b>大巴团队</b>
+                <span>预约 12 个车位</span>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-page guide-page" id="guide" data-section="guide" aria-labelledby="guide-title">
+        <div class="shell page-grid">
+          <div class="guide-copy reveal">
+            <p class="section-kicker">04 · 景区一码通层</p>
+            <h2 id="guide-title">进入景区后，一个码完成导览、讲解和服务</h2>
+            <p>
+              参考拈花湾彩虹游体验，把入园、停车、讲解、演艺提醒、消费核销、活动预约和满意度评价集中在“常熟一码游”。
+            </p>
+            <div class="one-code-grid">
+              <article><span>入</span><b>一码入园</b></article>
+              <article><span>P</span><b>一码停车</b></article>
+              <article><span>听</span><b>一码讲解</b></article>
+              <article><span>购</span><b>一码消费</b></article>
+              <article><span>约</span><b>一码预约</b></article>
+              <article><span>评</span><b>一码评价</b></article>
+            </div>
+
+            <div class="guide-tabs" aria-label="景区讲解切换">
+              <button class="guide-tab active" data-guide="虞山琴派文化" data-audio="03:28" data-line="从山门到琴川书院，听琴派故事与古城文脉。">虞山</button>
+              <button class="guide-tab" data-guide="尚湖湿地慢游" data-audio="04:12" data-line="沿湖心栈道听湿地生态、候鸟与江南水系。">尚湖</button>
+              <button class="guide-tab" data-guide="沙家浜红色研学" data-audio="05:06" data-line="跟随芦苇荡路线，串联红色记忆和实景演艺。">沙家浜</button>
+            </div>
+          </div>
+
+          <div class="phone-stage reveal">
+            <div class="phone">
+              <div class="phone-top"></div>
+              <div class="phone-screen">
+                <div class="phone-map">
+                  <span class="user-position"></span>
+                  <span class="phone-pin p1"></span>
+                  <span class="phone-pin p2"></span>
+                  <span class="phone-route"></span>
+                </div>
+                <div class="code-card">
+                  <span class="qr-code" aria-hidden="true"></span>
+                  <div>
+                    <p>常熟一码游</p>
+                    <b>可入园 · 可讲解 · 可核销</b>
+                  </div>
+                </div>
+                <div class="audio-card">
+                  <div>
+                    <p id="guideTitle">虞山琴派文化</p>
+                    <span id="guideLine">从山门到琴川书院，听琴派故事与古城文脉。</span>
+                  </div>
+                  <div class="audio-progress">
+                    <i></i>
+                </div>
+                <button class="solid-button small" type="button" id="audioTime">播放 03:28</button>
+              </div>
+                <div class="guide-checkpoints" id="guideCheckpoints" aria-label="讲解打卡点"></div>
+              </div>
+            </div>
+
+            <div class="guide-scenarios">
+              <article>
+                <span>游前</span>
+                <strong>预约门票、规划路线、查询停车</strong>
+              </article>
+              <article>
+                <span>游中</span>
+                <strong>智能导览、语音讲解、演艺提醒</strong>
+              </article>
+              <article>
+                <span>游后</span>
+                <strong>评价反馈、投诉闭环、游记生成</strong>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-page feedback-page" id="feedback" data-section="feedback" aria-labelledby="feedback-title">
+        <div class="shell page-grid reverse">
+          <div class="feedback-panel reveal">
+            <p class="section-kicker">05 · 诉求闭环</p>
+            <h2 id="feedback-title">有问题，马上办；有进度，看得见</h2>
+            <p>
+              游客提交问题后，平台自动识别景区、停车场、商户和责任部门，生成工单号并推送处理进度。
+            </p>
+            <form class="ticket-form" id="ticketForm">
+              <label>
+                问题类型
+                <select id="issueType">
+                  <option>停车收费疑问</option>
+                  <option>设施报修</option>
+                  <option>商户纠纷</option>
+                  <option>失物招领</option>
+                  <option>紧急求助</option>
+                </select>
+              </label>
+              <label>
+                所在位置
+                <input id="issuePlace" type="text" value="尚湖景区 P2 停车场" />
+              </label>
+              <label>
+                问题描述
+                <textarea id="issueDesc" rows="4">停车缴费页面显示异常，希望协助确认。</textarea>
+              </label>
+              <button class="solid-button" type="submit">提交诉求</button>
+            </form>
+          </div>
+
+          <div class="ticket-tracker reveal" aria-live="polite">
+            <div class="tracker-head">
+              <span>示例工单</span>
+              <strong id="ticketId">CSWL202607080018</strong>
+            </div>
+            <h3 id="ticketTitle">尚湖景区 P2 停车场收费疑问</h3>
+            <p id="ticketStatusText">状态：处理中，预计 30 分钟内反馈。</p>
+            <div class="flow-steps" aria-label="工单处理进度">
+              <span class="done">提交诉求</span>
+              <span class="done">智能分类</span>
+              <span class="active">部门派单</span>
+              <span>处理中</span>
+              <span>已办结</span>
+              <span>游客评价</span>
+            </div>
+            <div class="ticket-actions">
+              <button class="solid-button small" id="advanceTicket" type="button">推进工单</button>
+              <button class="ghost-button small" id="resetTicket" type="button">重置进度</button>
+            </div>
+            <div class="management-entry">
+              <h3>文旅运行态势</h3>
+              <div class="manager-grid">
+                <article><b>今日游客量</b><span>68,420</span></article>
+                <article><b>停车使用率</b><span>63%</span></article>
+                <article><b>诉求办结率</b><span>96.8%</span></article>
+                <article><b>满意度</b><span>4.8 / 5</span></article>
+              </div>
+              <button class="ghost-button full" type="button">进入管理驾驶舱</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="shell">
+        <strong>常熟智游 · Changshu Smart Travel</strong>
+        <span>原型演示：AI 行程 + 实时地图 + 停车客流 + 景区讲解 + 诉求闭环</span>
+      </div>
+    </footer>
+
+    <script src="data/content.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
